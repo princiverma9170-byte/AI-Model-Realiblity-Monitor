@@ -1,0 +1,98 @@
+Render में दो services के Environment Variables अलग-अलग होंगे।
+
+## 1. Frontend service: `obsidian-reliability-ui`
+
+Render → Frontend service → **Environment**
+
+केवल यह variable डालें:
+
+```env
+VITE_API_URL=https://obsidian-reliability-monitor.onrender.com
+```
+
+ध्यान दें: URL के अंत में `/` नहीं होना चाहिए।
+
+---
+
+## 2. Backend service: `obsidian-reliability-monitor`
+
+Render → Backend service → **Environment**
+
+ये variables डालें:
+
+```env
+CORS_ORIGINS=https://obsidian-reliability-ui.onrender.com
+API_KEY=
+```
+
+`API_KEY` अभी खाली रखें, क्योंकि frontend API key send नहीं करता।
+
+### Database
+
+अगर Render PostgreSQL database बनाया है:
+
+```env
+DATABASE_URL=Render PostgreSQL का Internal Database URL
+```
+
+इसे manually अनुमान से न लिखें। Render database से **Internal Database URL** copy करें।
+
+Local SQLite value production में न डालें:
+
+```env
+DATABASE_URL=sqlite:///./reliability_monitor.db
+```
+
+---
+
+## Telegram variables
+
+अगर Telegram alerts चाहिए:
+
+```env
+TELEGRAM_BOT_TOKEN=आपका_naya_rotated_bot_token
+TELEGRAM_CHAT_ID=आपका_chat_id
+```
+
+Token यहाँ chat में paste न करें।
+
+---
+
+## SMS variables
+
+अगर SMS alerts चाहिए:
+
+```env
+TWILIO_ACCOUNT_SID=आपका_twilio_account_sid
+TWILIO_AUTH_TOKEN=आपका_twilio_auth_token
+TWILIO_FROM_NUMBER=आपका_twilio_number
+ALERT_SMS_TO=जिस_number_पर_sms_भेजना_है
+```
+
+अगर Telegram और SMS अभी use नहीं करने हैं, तो इन variables को खाली छोड़ सकते हैं।
+
+---
+
+## Final configuration
+
+### Frontend
+
+```env
+VITE_API_URL=https://obsidian-reliability-monitor.onrender.com
+```
+
+### Backend
+
+```env
+DATABASE_URL=Render_PostgreSQL_Internal_URL
+CORS_ORIGINS=https://obsidian-reliability-ui.onrender.com
+API_KEY=
+TELEGRAM_BOT_TOKEN=
+TELEGRAM_CHAT_ID=
+TWILIO_ACCOUNT_SID=
+TWILIO_AUTH_TOKEN=
+TWILIO_FROM_NUMBER=
+ALERT_SMS_TO=
+```
+
+Variables save करने के बाद frontend और backend दोनों पर **Manual Deploy → Deploy latest commit** करें।
